@@ -1,4 +1,4 @@
-package com.test.task.productservice;
+package com.test.task.productservice.entity;
 
 import javax.persistence.*;
 

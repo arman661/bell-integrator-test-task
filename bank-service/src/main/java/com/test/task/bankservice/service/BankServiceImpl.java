@@ -1,5 +1,13 @@
-package com.test.task.bankservice;
+package com.test.task.bankservice.service;
 
+import com.test.task.bankservice.AccountRecord;
+import com.test.task.bankservice.NotEnoughFundsException;
+import com.test.task.bankservice.OperationStatus;
+import com.test.task.bankservice.PaymentRequest;
+import com.test.task.bankservice.entity.Account;
+import com.test.task.bankservice.entity.Operation;
+import com.test.task.bankservice.repository.AccountRepository;
+import com.test.task.bankservice.repository.OperationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +27,7 @@ public class BankServiceImpl implements BankService{
     }
 
     @Override
-    public void billPayment(PaymentRequest paymentRequest) throws Exception {
+    public void billPayment(PaymentRequest paymentRequest) {
         Account account = accountRepository.findByCardNumber(paymentRequest.getCardNumber()).orElseThrow(EntityNotFoundException::new);
         Operation operation = new Operation();
         operation.setId(paymentRequest.getBillUuid());
@@ -29,7 +37,7 @@ public class BankServiceImpl implements BankService{
             account.setBalance(account.getBalance() - paymentRequest.getTotalSum());
             operation.setStatus(OperationStatus.SUCCEED.toString());
         } else {
-            throw new Exception("Not enough money in your account");
+            throw new NotEnoughFundsException("Not enough money in your account");
         }
         operationRepository.save(operation);
     }
@@ -37,7 +45,7 @@ public class BankServiceImpl implements BankService{
     @Override
     public Boolean confirmPayment(UUID billUuid) {
         String status = operationRepository.findStatusById(billUuid).orElseThrow(() -> new EntityNotFoundException());
-        return status.equals(OperationStatus.SUCCEED);
+        return status.equals(OperationStatus.SUCCEED.toString());
     }
 
     private Account toEntity(AccountRecord accountRecord) {

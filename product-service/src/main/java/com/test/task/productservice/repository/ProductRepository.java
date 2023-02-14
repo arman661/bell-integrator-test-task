@@ -1,5 +1,6 @@
-package com.test.task.productservice;
+package com.test.task.productservice.repository;
 
+import com.test.task.productservice.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

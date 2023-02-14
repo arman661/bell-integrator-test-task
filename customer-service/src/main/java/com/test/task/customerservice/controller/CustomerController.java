@@ -1,9 +1,9 @@
 package com.test.task.customerservice.controller;
 
-import com.test.task.customerservice.Bill;
 import com.test.task.customerservice.CustomerRecord;
 import com.test.task.customerservice.entity.Customer;
 import com.test.task.customerservice.service.CustomerService;
+import com.test.task.productservice.Bill;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;

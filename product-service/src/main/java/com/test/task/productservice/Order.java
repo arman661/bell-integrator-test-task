@@ -1,4 +1,4 @@
-package com.test.task.productservice.controller;
+package com.test.task.productservice;
 
 import lombok.Data;
 

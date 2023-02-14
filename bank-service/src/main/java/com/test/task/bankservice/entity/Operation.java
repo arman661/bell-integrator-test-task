@@ -1,4 +1,6 @@
-package com.test.task.bankservice;
+package com.test.task.bankservice.entity;
+
+import com.test.task.bankservice.OperationStatus;
 
 import javax.persistence.*;
 import java.util.UUID;

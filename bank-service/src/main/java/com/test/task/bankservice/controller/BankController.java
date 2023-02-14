@@ -1,5 +1,10 @@
-package com.test.task.bankservice;
+package com.test.task.bankservice.controller;
 
+import com.test.task.bankservice.AccountRecord;
+import com.test.task.bankservice.PaymentRequest;
+import com.test.task.bankservice.entity.Account;
+import com.test.task.bankservice.entity.Operation;
+import com.test.task.bankservice.service.BankService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;

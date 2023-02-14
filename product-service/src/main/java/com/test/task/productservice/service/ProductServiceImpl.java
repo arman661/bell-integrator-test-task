@@ -1,9 +1,10 @@
-package com.test.task.productservice;
+package com.test.task.productservice.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.test.task.productservice.controller.Item;
-import com.test.task.productservice.controller.Order;
+import com.test.task.productservice.*;
+import com.test.task.productservice.entity.Product;
+import com.test.task.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpEntity;
@@ -85,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
         Operation operation = objectMapper.readValue(body, Operation.class);
         boolean confirmPayment = confirmPayment(bill.getBillUuid());
         if (!operation.getStatus().equals("SUCCEED") && confirmPayment) {
-            throw new Exception();
+            throw new NoBankConfirmationException("The bank did not confirm the transaction");
         }
         return null;
     }

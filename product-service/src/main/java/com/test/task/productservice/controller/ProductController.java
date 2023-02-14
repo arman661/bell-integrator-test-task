@@ -1,9 +1,10 @@
 package com.test.task.productservice.controller;
 
-import com.test.task.productservice.Product;
+import com.test.task.productservice.Order;
 import com.test.task.productservice.ProductRecord;
 import com.test.task.productservice.ProductResponse;
-import com.test.task.productservice.ProductService;
+import com.test.task.productservice.entity.Product;
+import com.test.task.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;

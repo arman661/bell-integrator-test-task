@@ -1,11 +1,11 @@
 package com.test.task.customerservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.test.task.customerservice.Bill;
+import com.test.task.bankservice.PaymentRequest;
 import com.test.task.customerservice.CustomerRecord;
-import com.test.task.customerservice.PaymentRequest;
 import com.test.task.customerservice.entity.Customer;
 import com.test.task.customerservice.repository.CustomerRepository;
+import com.test.task.productservice.Bill;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
