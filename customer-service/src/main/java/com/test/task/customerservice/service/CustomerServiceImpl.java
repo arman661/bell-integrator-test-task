@@ -74,7 +74,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 
         return new RestTemplate()
-                        .postForEntity("http://localhost:8086/bank/billPayment", request
+                        .postForEntity("http://localhost:8765/bank/billPayment", request
                                 , String.class);
     }
 

@@ -103,7 +103,7 @@ public class ProductServiceImpl implements ProductService {
         HttpEntity<String> request = new HttpEntity<>(body, headers);
 
         return new RestTemplate()
-                .postForEntity("http://localhost:8086/bank/confirmPayment", request
+                .postForEntity("http://localhost:8765/bank/confirmPayment", request
                         , Boolean.class).getBody();
     }
 
@@ -121,7 +121,7 @@ public class ProductServiceImpl implements ProductService {
         HttpEntity<String> request = new HttpEntity<>(body, headers);
 
         return new RestTemplate()
-                .postForEntity("http://localhost:8084/customer/billPayment", request
+                .postForEntity("http://localhost:8765/customer/billPayment", request
                         , String.class);
     }
 
