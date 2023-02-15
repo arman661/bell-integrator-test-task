@@ -1,16 +1,18 @@
 package com.test.task.customerservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.test.task.bankservice.PaymentRequest;
+import com.test.task.common.model.BillPaymentResult;
+import com.test.task.common.model.OperationStatus;
+import com.test.task.common.model.PaymentRequest;
+import com.test.task.customerservice.Bill;
 import com.test.task.customerservice.CustomerRecord;
 import com.test.task.customerservice.entity.Customer;
+import com.test.task.customerservice.exception.PaymentException;
 import com.test.task.customerservice.repository.CustomerRepository;
-import com.test.task.productservice.Bill;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,8 +21,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Value("${gateway.host}")
+    private String gatewayHost;
 
     @Override
     public Customer save(CustomerRecord customerRecord) {
@@ -31,7 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer update(CustomerRecord customerRecord) {
         Customer customer = customerRepository.findById(customerRecord.getId()).orElseThrow(()
-                -> new IllegalArgumentException("Cannot find Customer with id = " + customerRecord.getId()));
+                -> new IllegalArgumentException("Can't find Customer with id = " + customerRecord.getId()));
         if (customerRecord.getName() != null) {
             customer.setName(customerRecord.getName());
         }
@@ -55,27 +62,33 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public ResponseEntity<String> billPayment(Bill bill) {
-        Customer customer = customerRepository.findById(bill.getClientId()).orElseThrow(EntityNotFoundException::new);
+    public ResponseEntity<BillPaymentResult> billPayment(Bill bill) {
+        Customer customer = customerRepository.findById(bill.getClientId())
+                .orElseThrow(EntityNotFoundException::new);
+
         PaymentRequest paymentRequest = new PaymentRequest();
         paymentRequest.setBillUuid(bill.getBillUuid());
         paymentRequest.setCardNumber(customer.getBankAccount());
         paymentRequest.setTotalSum(bill.getTotalSum());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        ObjectMapper objectMapper = new ObjectMapper();
         String body = "";
         try {
             body = objectMapper.writeValueAsString(paymentRequest);
         } catch (Exception e) {
-
+            log.error("Can't parse PaymentRequest to json {}", paymentRequest);
+            throw new IllegalArgumentException("Unable to write PaymentRequest to json");
         }
         HttpEntity<String> request = new HttpEntity<>(body, headers);
 
-
-        return new RestTemplate()
-                        .postForEntity("http://localhost:8765/bank/billPayment", request
-                                , String.class);
+        final ResponseEntity<BillPaymentResult> responseEntity = new RestTemplate()
+                .postForEntity(gatewayHost + "/bank/billPayment", request
+                        , BillPaymentResult.class);
+        if (responseEntity.getStatusCode() != HttpStatus.OK || responseEntity.getBody() == null
+                || OperationStatus.SUCCEED != responseEntity.getBody().getStatus()) {
+            throw new PaymentException();
+        }
+        return responseEntity;
     }
 
     private Customer toEntity(CustomerRecord customerRecord) {

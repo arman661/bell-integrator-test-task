@@ -1,9 +1,10 @@
 package com.test.task.customerservice.controller;
 
+import com.test.task.common.model.BillPaymentResult;
+import com.test.task.customerservice.Bill;
 import com.test.task.customerservice.CustomerRecord;
 import com.test.task.customerservice.entity.Customer;
 import com.test.task.customerservice.service.CustomerService;
-import com.test.task.productservice.Bill;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
@@ -19,7 +20,7 @@ import java.util.List;
 public class CustomerController {
     private final CustomerService customerService;
 
-    @PostMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Customer> save(@RequestBody CustomerRecord customerRecord) {
         try {
             Customer customer = customerService.save(customerRecord);
@@ -53,7 +54,7 @@ public class CustomerController {
     }
 
     @PostMapping(value = "/billPayment", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> billPayment(@RequestBody Bill bill) {
+    public ResponseEntity<BillPaymentResult> billPayment(@RequestBody Bill bill) {
         return customerService.billPayment(bill);
     }
 }

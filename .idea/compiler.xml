@@ -7,11 +7,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="customer-service" />
+        <module name="common-model" />
         <module name="api-gateway" />
         <module name="product-service" />
-        <module name="bell-integrator-test-task" />
         <module name="eureka-server" />
-        <module name="customer-service" />
         <module name="bank-service" />
       </profile>
     </annotationProcessing>

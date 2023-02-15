@@ -1,12 +1,12 @@
 package com.test.task.bankservice.entity;
 
-import com.test.task.bankservice.OperationStatus;
+import com.test.task.common.model.OperationStatus;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-public class Operation {
+public class Bill {
     @Id
     @Column
     private UUID id;
@@ -53,3 +53,4 @@ public class Operation {
         this.account = account;
     }
 }
+

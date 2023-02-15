@@ -2,23 +2,23 @@ package com.test.task.bankservice.service;
 
 import com.test.task.bankservice.AccountRecord;
 import com.test.task.bankservice.NotEnoughFundsException;
-import com.test.task.bankservice.OperationStatus;
-import com.test.task.bankservice.PaymentRequest;
 import com.test.task.bankservice.entity.Account;
-import com.test.task.bankservice.entity.Operation;
+import com.test.task.bankservice.entity.Bill;
 import com.test.task.bankservice.repository.AccountRepository;
-import com.test.task.bankservice.repository.OperationRepository;
+import com.test.task.bankservice.repository.BillRepository;
+import com.test.task.common.model.OperationStatus;
+import com.test.task.common.model.PaymentRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class BankServiceImpl implements BankService{
     private final AccountRepository accountRepository;
-    private final OperationRepository operationRepository;
+    private final BillRepository billRepository;
 
     @Override
     public Account save(AccountRecord accountRecord) {
@@ -27,25 +27,31 @@ public class BankServiceImpl implements BankService{
     }
 
     @Override
+    @Transactional
     public void billPayment(PaymentRequest paymentRequest) {
-        Account account = accountRepository.findByCardNumber(paymentRequest.getCardNumber()).orElseThrow(EntityNotFoundException::new);
-        Operation operation = new Operation();
-        operation.setId(paymentRequest.getBillUuid());
-        operation.setAmountOfPayment(paymentRequest.getTotalSum());
-        operation.getAccount().setCardNumber(paymentRequest.getCardNumber());
-        if(account.getBalance() >= paymentRequest.getTotalSum()) {
-            account.setBalance(account.getBalance() - paymentRequest.getTotalSum());
-            operation.setStatus(OperationStatus.SUCCEED.toString());
-        } else {
+        Account account = accountRepository.findByCardNumber(paymentRequest.getCardNumber())
+                .orElseThrow(() -> new IllegalStateException(
+                        String.format("Account %s doesn't exist", paymentRequest.getCardNumber())));
+        if (account.getBalance() < paymentRequest.getTotalSum()) {
             throw new NotEnoughFundsException("Not enough money in your account");
         }
-        operationRepository.save(operation);
+        Bill bill = new Bill();
+        bill.setId(paymentRequest.getBillUuid());
+        bill.setAmountOfPayment(paymentRequest.getTotalSum());
+        bill.setAccount(account);
+        bill.setStatus(OperationStatus.SUCCEED.toString());
+        billRepository.save(bill);
+
+        account.setBalance(account.getBalance() - paymentRequest.getTotalSum());
+        accountRepository.save(account);
+
     }
 
     @Override
     public Boolean confirmPayment(UUID billUuid) {
-        String status = operationRepository.findStatusById(billUuid).orElseThrow(() -> new EntityNotFoundException());
-        return status.equals(OperationStatus.SUCCEED.toString());
+        return billRepository.findStatusById(billUuid)
+                .map(bill -> OperationStatus.SUCCEED.name().equals(bill.getStatus()))
+                .orElse(false);
     }
 
     private Account toEntity(AccountRecord accountRecord) {

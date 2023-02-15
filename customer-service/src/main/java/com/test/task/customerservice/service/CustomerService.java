@@ -1,8 +1,9 @@
 package com.test.task.customerservice.service;
 
+import com.test.task.common.model.BillPaymentResult;
+import com.test.task.customerservice.Bill;
 import com.test.task.customerservice.CustomerRecord;
 import com.test.task.customerservice.entity.Customer;
-import com.test.task.productservice.Bill;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -16,5 +17,5 @@ public interface CustomerService {
 
     List<Customer> getAll();
 
-    ResponseEntity<String> billPayment(Bill bill);
+    ResponseEntity<BillPaymentResult> billPayment(Bill bill);
 }

@@ -1,8 +1,8 @@
 package com.test.task.bankservice.service;
 
 import com.test.task.bankservice.AccountRecord;
-import com.test.task.bankservice.PaymentRequest;
 import com.test.task.bankservice.entity.Account;
+import com.test.task.common.model.PaymentRequest;
 
 import java.util.UUID;
 

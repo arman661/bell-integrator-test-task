@@ -1,10 +1,10 @@
-package com.test.task.eurekaserver;
+package com.test.task.common.model.bankservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class EurekaServerApplicationTests {
+class BankServiceApplicationTests {
 
     @Test
     void contextLoads() {

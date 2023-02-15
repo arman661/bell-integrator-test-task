@@ -1,10 +1,11 @@
 package com.test.task.bankservice.controller;
 
 import com.test.task.bankservice.AccountRecord;
-import com.test.task.bankservice.PaymentRequest;
 import com.test.task.bankservice.entity.Account;
-import com.test.task.bankservice.entity.Operation;
 import com.test.task.bankservice.service.BankService;
+import com.test.task.common.model.BillPaymentResult;
+import com.test.task.common.model.OperationStatus;
+import com.test.task.common.model.PaymentRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
@@ -20,7 +21,7 @@ import java.util.UUID;
 public class BankController {
     private final BankService bankService;
 
-    @PostMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     public ResponseEntity<Account> save(@RequestBody AccountRecord accountRecord) {
         try {
             Account account = bankService.save(accountRecord);
@@ -32,17 +33,32 @@ public class BankController {
     }
 
     @PostMapping(value = "/billPayment", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Operation> billPayment(@RequestBody PaymentRequest paymentRequest) {
+    public ResponseEntity<BillPaymentResult> billPayment(@RequestBody PaymentRequest paymentRequest) {
         try {
             bankService.billPayment(paymentRequest);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(new BillPaymentResult(paymentRequest.getBillUuid()
+                    , OperationStatus.SUCCEED));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            log.error(e);
+            return ResponseEntity.internalServerError().body(new BillPaymentResult(paymentRequest.getBillUuid()
+                    , OperationStatus.FAILED));
         }
     }
 
-    @GetMapping(value = "/confirmPayment")
-    public Boolean confirmPayment(@RequestBody UUID billUuid) {
-        return bankService.confirmPayment(billUuid);
+    @GetMapping(value = "/confirmPayment", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BillPaymentResult> confirmPayment(@RequestParam("uuid") String billUuidParam) {
+        UUID billUuid = UUID.fromString(billUuidParam);
+        try {
+            if (bankService.confirmPayment(billUuid)) {
+                return ResponseEntity.ok(new BillPaymentResult(billUuid
+                        , OperationStatus.SUCCEED));
+            }
+        } catch (Exception e) {
+            log.error(e);
+            return ResponseEntity.internalServerError().body(new BillPaymentResult(billUuid
+                    , OperationStatus.FAILED));
+        }
+        return ResponseEntity.ok(new BillPaymentResult(billUuid
+                , OperationStatus.FAILED));
     }
  }
