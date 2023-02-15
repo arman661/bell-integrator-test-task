@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.task.common.model.BillPaymentResult;
 import com.test.task.common.model.BillRequest;
 import com.test.task.common.model.OperationStatus;
-import com.test.task.productservice.Order;
+import com.test.task.productservice.dto.Order;
 import com.test.task.productservice.entity.Product;
 import com.test.task.productservice.exception.PaymentException;
 import lombok.extern.log4j.Log4j2;
@@ -60,16 +60,6 @@ public class BillService {
     }
 
     public BillPaymentResult confirmPayment(UUID billUuid) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        String body = "";
-        try {
-            body = objectMapper.writeValueAsString(billUuid);
-        } catch (JsonProcessingException e) {
-            log.error("Can't parse Order to json");
-        }
-        HttpEntity<String> request = new HttpEntity<>(body, headers);
-
         return new RestTemplate()
                 .getForEntity(gatewayHost + "/bank/confirmPayment?uuid=" + billUuid.toString(), BillPaymentResult.class).getBody();
     }

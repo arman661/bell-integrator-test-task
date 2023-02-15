@@ -1,4 +1,4 @@
-package com.test.task.bankservice;
+package com.test.task.bankservice.dto;
 
 import lombok.Data;
 

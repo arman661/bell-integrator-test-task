@@ -1,4 +1,4 @@
-package com.test.task.productservice;
+package com.test.task.productservice.dto;
 
 import lombok.Data;
 

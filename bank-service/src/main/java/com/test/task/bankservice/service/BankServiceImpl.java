@@ -1,17 +1,17 @@
 package com.test.task.bankservice.service;
 
-import com.test.task.bankservice.AccountRecord;
-import com.test.task.bankservice.NotEnoughFundsException;
+import com.test.task.bankservice.dto.AccountRecord;
 import com.test.task.bankservice.entity.Account;
 import com.test.task.bankservice.entity.Bill;
+import com.test.task.bankservice.exception.NotEnoughFundsException;
 import com.test.task.bankservice.repository.AccountRepository;
 import com.test.task.bankservice.repository.BillRepository;
 import com.test.task.common.model.OperationStatus;
 import com.test.task.common.model.PaymentRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.UUID;
 
 @Service

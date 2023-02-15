@@ -1,8 +1,8 @@
 package com.test.task.customerservice.service;
 
 import com.test.task.common.model.BillPaymentResult;
-import com.test.task.customerservice.Bill;
-import com.test.task.customerservice.CustomerRecord;
+import com.test.task.customerservice.dto.Bill;
+import com.test.task.customerservice.dto.CustomerRecord;
 import com.test.task.customerservice.entity.Customer;
 import org.springframework.http.ResponseEntity;
 

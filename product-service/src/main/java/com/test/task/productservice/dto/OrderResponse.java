@@ -1,4 +1,4 @@
-package com.test.task.productservice;
+package com.test.task.productservice.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -9,8 +9,8 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class OrderResponse {
-    private List<ProductRecord> outOfStock;
-    private List<String> errors;
+    private List<ProductRecord> outOfStock = new ArrayList<>();
+    private List<String> errors = new ArrayList<>();
     private Boolean succeed;
 
     public static OrderResponse createResponse(boolean succeed) {
@@ -20,9 +20,6 @@ public class OrderResponse {
     }
 
     public OrderResponse addError(String errorMessage) {
-        if (errors == null) {
-            errors = new ArrayList<>();
-        }
         errors.add(errorMessage);
         return this;
     }

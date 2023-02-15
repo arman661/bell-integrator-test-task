@@ -1,8 +1,8 @@
 package com.test.task.productservice.controller;
 
-import com.test.task.productservice.Order;
-import com.test.task.productservice.OrderResponse;
-import com.test.task.productservice.ProductRecord;
+import com.test.task.productservice.dto.Order;
+import com.test.task.productservice.dto.OrderResponse;
+import com.test.task.productservice.dto.ProductRecord;
 import com.test.task.productservice.entity.Product;
 import com.test.task.productservice.exception.NoBankConfirmationException;
 import com.test.task.productservice.exception.PaymentException;

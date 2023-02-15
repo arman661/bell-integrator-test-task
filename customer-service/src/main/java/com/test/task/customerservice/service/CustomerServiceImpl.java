@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.task.common.model.BillPaymentResult;
 import com.test.task.common.model.OperationStatus;
 import com.test.task.common.model.PaymentRequest;
-import com.test.task.customerservice.Bill;
-import com.test.task.customerservice.CustomerRecord;
+import com.test.task.customerservice.dto.Bill;
+import com.test.task.customerservice.dto.CustomerRecord;
 import com.test.task.customerservice.entity.Customer;
 import com.test.task.customerservice.exception.PaymentException;
 import com.test.task.customerservice.repository.CustomerRepository;
@@ -37,6 +37,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer update(CustomerRecord customerRecord) {
+        if (customerRecord == null || customerRecord.getId() == null) {
+            throw new IllegalArgumentException("Can't update customer without ID");
+        }
         Customer customer = customerRepository.findById(customerRecord.getId()).orElseThrow(()
                 -> new IllegalArgumentException("Can't find Customer with id = " + customerRecord.getId()));
         if (customerRecord.getName() != null) {

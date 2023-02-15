@@ -1,6 +1,6 @@
 package com.test.task.bankservice.controller;
 
-import com.test.task.bankservice.AccountRecord;
+import com.test.task.bankservice.dto.AccountRecord;
 import com.test.task.bankservice.entity.Account;
 import com.test.task.bankservice.service.BankService;
 import com.test.task.common.model.BillPaymentResult;
@@ -32,7 +32,7 @@ public class BankController {
         }
     }
 
-    @PostMapping(value = "/billPayment", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/billPayment")
     public ResponseEntity<BillPaymentResult> billPayment(@RequestBody PaymentRequest paymentRequest) {
         try {
             bankService.billPayment(paymentRequest);

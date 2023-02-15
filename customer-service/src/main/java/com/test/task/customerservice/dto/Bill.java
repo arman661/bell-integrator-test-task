@@ -1,4 +1,4 @@
-package com.test.task.customerservice;
+package com.test.task.customerservice.dto;
 
 import lombok.Data;
 

@@ -3,16 +3,17 @@ package com.test.task.productservice.service;
 import com.test.task.common.model.BillPaymentResult;
 import com.test.task.common.model.BillRequest;
 import com.test.task.common.model.OperationStatus;
-import com.test.task.productservice.Item;
-import com.test.task.productservice.Order;
-import com.test.task.productservice.OrderResponse;
-import com.test.task.productservice.ProductRecord;
+import com.test.task.productservice.dto.Item;
+import com.test.task.productservice.dto.Order;
+import com.test.task.productservice.dto.OrderResponse;
+import com.test.task.productservice.dto.ProductRecord;
 import com.test.task.productservice.entity.Product;
 import com.test.task.productservice.exception.NoBankConfirmationException;
 import com.test.task.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public OrderResponse buy(Order order) {
         List<Long> productIds = order.getItems().stream().map(Item::getId)
                 .collect(Collectors.toList());
